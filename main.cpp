@@ -104,7 +104,6 @@ void tick()
     case 0x2000:
         stack[SP] = PC;
         ++SP;
-
         PC = (nnn);
         break;
     case 0x3000:
@@ -121,11 +120,9 @@ void tick()
         break;
     case 0x6000:
         V[x] = (nn);
-
         break;
     case 0x7000:
         V[x] += (nn);
-
         break;
 
     case 0x8000:
@@ -134,19 +131,15 @@ void tick()
         {
         case 0x0000:
             V[x] = V[y];
-
             break;
         case 0x0001:
             V[x] |= V[y];
-
             break;
         case 0x0002:
             V[x] &= V[y];
-
             break;
         case 0x0003:
             V[x] ^= V[y];
-
             break;
         case 0x0004:
             V[x] += V[y];
@@ -155,7 +148,6 @@ void tick()
                 V[0xF] = 1;
             else
                 V[0xF] = 0;
-
             break;
         case 0x0005:
             if (V[y] > V[x])
@@ -164,12 +156,10 @@ void tick()
                 V[0xF] = 1;
 
             V[x] -= V[y];
-
             break;
         case 0x0006:
             V[0xF] = V[x] & 0x1;
             V[x] >>= 1;
-
             break;
         case 0x0007:
             if (V[x] > V[y])
@@ -178,12 +168,10 @@ void tick()
                 V[0xF] = 1;
 
             V[x] = V[y] - V[x];
-
             break;
         case 0x000E:
             V[0xF] = V[x] >> 7;
             V[x] <<= 1;
-
             break;
         }
         break;
@@ -201,7 +189,6 @@ void tick()
         break;
     case 0xC000:
         V[x] = (rand() % (0xFF + 1)) & (nn);
-
         break;
     case 0xD000:
     {
@@ -252,7 +239,6 @@ void tick()
         {
         case 0x0007:
             V[x] = DT;
-
             break;
         case 0x000A:
         {
