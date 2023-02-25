@@ -61,7 +61,7 @@ void tick()
 {
     uint16_t op = (cpu.memory[cpu.PC] << 8) | cpu.memory[cpu.PC + 1];
     std::cout
-        << "HI: " << (uint16_t)memory[PC] << " | LO:" << (uint16_t)memory[PC + 1] << "| OPCODE: " << op << " | PC: " << PC << "\n";
+        << "HI: " << (uint16_t)cpu.memory[cpu.PC] << " | LO:" << (uint16_t)cpu.memory[cpu.PC + 1] << "| OPCODE: " << op << " | PC: " << cpu.PC << "\n";
 
     cpu.PC += 2;
 
@@ -82,7 +82,7 @@ void tick()
             draw = true;
             break;
         case 0x000E:
-            cpu.cSP--;
+            cpu.SP--;
             cpu.PC = cpu.stack[cpu.SP];
             break;
         }
@@ -92,7 +92,7 @@ void tick()
         cpu.PC = (nnn);
         break;
     case 0x2000:
-        stack[cpu.SP] = cpu.PC;
+        cpu.stack[cpu.SP] = cpu.PC;
         ++cpu.SP;
         cpu.PC = (nnn);
         break;
@@ -190,16 +190,16 @@ void tick()
         cpu.V[0xF] = 0;
         for (int yline = 0; yline < height; yline++)
         {
-            pixel = memory[I + yline];
+            pixel = cpu.memory[cpu.I + yline];
             for (int xline = 0; xline < 8; xline++)
             {
                 if ((pixel & (0x80 >> xline)) != 0)
                 {
                     int coordinate = ((cx + xline) + ((cy + yline) * 64)) % 2048;
-                    if (screen[coordinate] == 1)
+                    if (cpu.screen[coordinate] == 1)
                         cpu.V[0xF] = 1;
 
-                    screen[coordinate] ^= 1;
+                    cpu.screen[coordinate] ^= 1;
                 }
             }
         }
@@ -212,11 +212,11 @@ void tick()
         switch ((nn))
         {
         case 0x009E:
-            if (keyboard[cpu.V[x]] != 0)
+            if (cpu.keyboard[cpu.V[x]] != 0)
                 cpu.PC += 2;
             break;
         case 0x00A1:
-            if (keyboard[cpu.V[x]] == 0)
+            if (cpu.keyboard[cpu.V[x]] == 0)
                 cpu.PC += 2;
             break;
         }
@@ -235,7 +235,7 @@ void tick()
             bool found = false;
             for (int i = 0; i < 16; i++)
             {
-                if (keyboard[i] != 0)
+                if (cpu.keyboard[i] != 0)
                 {
                     cpu.V[x] = i;
                     found = true;
@@ -269,21 +269,21 @@ void tick()
         {
             auto num = cpu.V[x];
 
-            memory[cpu.I] = (num / 100);
-            memory[cpu.I + 1] = (num / 10) % 10;
-            memory[cpu.I + 2] = num % 10;
+            cpu.memory[cpu.I] = (num / 100);
+            cpu.memory[cpu.I + 1] = (num / 10) % 10;
+            cpu.memory[cpu.I + 2] = num % 10;
         }
         break;
         case 0x0055:
         {
             for (int i = 0; i <= (x); i++)
-                memory[cpu.I + i] = cpu.V[i];
+                cpu.memory[cpu.I + i] = cpu.V[i];
         }
         break;
         case 0x0065:
         {
             for (int i = 0; i <= (x); i++)
-                cpu.V[i] = memory[cpu.I + i];
+                cpu.V[i] = cpu.memory[cpu.I + i];
         }
         break;
         }
