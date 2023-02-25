@@ -74,15 +74,6 @@ int main(int argv, char *args[])
 
     srand(time(NULL));
 
-    for (int i = 0; i < 16; i++)
-        cpu.V[i] = 0;
-    for (int i = 0; i < 4096; i++)
-        cpu.memory[i] = 0;
-    for (int i = 0; i < 24; i++)
-        cpu.stack[i] = 0;
-    for (int i = 0; i < 2048; i++)
-        cpu.screen[i] = 0;
-
     for (int i = 0; i < 16 * 5; i++)
     {
         cpu.memory[i] = font[i];
