@@ -7,6 +7,8 @@
 #include <iostream>
 #include <fstream>
 
+#include "font.h"
+
 typedef struct CPU
 {
     uint8_t V[16];

@@ -15,25 +15,6 @@
 
 #include "cpu.h"
 
-const unsigned char font[80] = {
-    0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
-    0x20, 0x60, 0x20, 0x20, 0x70, // 1
-    0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
-    0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
-    0x90, 0x90, 0xF0, 0x10, 0x10, // 4
-    0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
-    0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
-    0xF0, 0x10, 0x20, 0x40, 0x40, // 7
-    0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
-    0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
-    0xF0, 0x90, 0xF0, 0x90, 0x90, // A
-    0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
-    0xF0, 0x80, 0x80, 0x80, 0xF0, // C
-    0xE0, 0x90, 0x90, 0x90, 0xE0, // D
-    0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
-    0xF0, 0x80, 0xF0, 0x80, 0x80  // F
-};
-
 uint8_t keymap[16] = {
     SDLK_x,
     SDLK_1,
@@ -74,55 +55,9 @@ int main(int argv, char *args[])
 
     srand(time(NULL));
 
-    for (int i = 0; i < 16 * 5; i++)
-    {
-        cpu.memory[i] = font[i];
-    }
+    cpu.init();
 
-    FILE *rom = fopen("./roms/games/pong.ch8", "rb");
-    if (rom == NULL)
-    {
-        std::cerr << "Failed to open ROM" << std::endl;
-        return false;
-    }
-
-    // Get file size
-    fseek(rom, 0, SEEK_END);
-    long rom_size = ftell(rom);
-    rewind(rom);
-
-    // Allocate memory to store rom
-    char *rom_buffer = (char *)malloc(sizeof(char) * rom_size);
-    if (rom_buffer == NULL)
-    {
-        std::cerr << "Failed to allocate memory for ROM" << std::endl;
-        return false;
-    }
-
-    // Copy ROM into buffer
-    size_t result = fread(rom_buffer, sizeof(char), (size_t)rom_size, rom);
-    if (result != rom_size)
-    {
-        std::cerr << "Failed to read ROM" << std::endl;
-        return false;
-    }
-
-    // Copy buffer to memory
-    if ((4096 - 512) > rom_size)
-    {
-        for (int i = 0; i < rom_size; ++i)
-        {
-            cpu.memory[i + 512] = (uint8_t)rom_buffer[i];
-        }
-    }
-    else
-    {
-        std::cerr << "ROM too large to fit in memory" << std::endl;
-    }
-
-    // Clean up
-    fclose(rom);
-    free(rom_buffer);
+    cpu.load_rom("./roms/games/pong.ch8");
 
     SDL_Event e;
 
