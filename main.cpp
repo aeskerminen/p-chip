@@ -78,6 +78,7 @@ void tick()
     int x = ((op & 0x0F00) >> 8);
     int y = ((op & 0x00F0) >> 4);
     int nnn = (op & 0x0FFF);
+    int nn = (op & 0x00FF);
 
     switch (op & 0xF000)
     {
@@ -107,11 +108,11 @@ void tick()
         PC = (nnn);
         break;
     case 0x3000:
-        if (V[x] == (op & 0x00FF))
+        if (V[x] == (nn))
             PC += 2;
         break;
     case 0x4000:
-        if (V[x] != (op & 0x00FF))
+        if (V[x] != (nn))
             PC += 2;
         break;
     case 0x5000:
@@ -119,11 +120,11 @@ void tick()
             PC += 2;
         break;
     case 0x6000:
-        V[x] = (op & 0x00FF);
+        V[x] = (nn);
 
         break;
     case 0x7000:
-        V[x] += (op & 0x00FF);
+        V[x] += (nn);
 
         break;
 
@@ -199,7 +200,7 @@ void tick()
         PC = V[0x0] + (nnn);
         break;
     case 0xC000:
-        V[x] = (rand() % (0xFF + 1)) & (op & 0x00FF);
+        V[x] = (rand() % (0xFF + 1)) & (nn);
 
         break;
     case 0xD000:
@@ -231,7 +232,7 @@ void tick()
     break;
     case 0xE000:
     {
-        switch ((op & 0x00FF))
+        switch ((nn))
         {
         case 0x009E:
             if (keyboard[V[x]] != 0)
@@ -247,7 +248,7 @@ void tick()
 
     case 0xF000:
     {
-        switch ((op & 0x00FF))
+        switch ((nn))
         {
         case 0x0007:
             V[x] = DT;
