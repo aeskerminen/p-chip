@@ -261,7 +261,6 @@ void CPU::init()
 
 void CPU::load_rom(const char *PATH)
 {
-    FILE *rom = fopen(PATH, "rb");
     std::streampos size;
     char *buffer;
 
@@ -272,12 +271,12 @@ void CPU::load_rom(const char *PATH)
         buffer = new char[size];
 
         rom.seekg(0, std::ios::beg);
-        file.read(buffer, size);
-        file.close();
+        rom.read(buffer, size);
+        rom.close();
     }
 
     for (int i = 0; i < size; i++)
     {
-        memory[0x200 + i] = buffer[i];
+        memory[0x200 + i] = (uint8_t)buffer[i];
     }
 }
