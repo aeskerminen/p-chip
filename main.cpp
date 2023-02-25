@@ -77,6 +77,7 @@ void tick()
 
     int x = ((op & 0x0F00) >> 8);
     int y = ((op & 0x00F0) >> 4);
+    int nnn = (op & 0x0FFF);
 
     switch (op & 0xF000)
     {
@@ -97,13 +98,13 @@ void tick()
         break;
     }
     case 0x1000:
-        PC = (op & 0x0FFF);
+        PC = (nnn);
         break;
     case 0x2000:
         stack[SP] = PC;
         ++SP;
 
-        PC = (op & 0x0FFF);
+        PC = (nnn);
         break;
     case 0x3000:
         if (V[x] == (op & 0x00FF))
@@ -192,10 +193,10 @@ void tick()
             PC += 2;
         break;
     case 0xA000:
-        I = op & 0x0FFF;
+        I = nnn;
         break;
     case 0xB000:
-        PC = V[0x0] + (op & 0x0FFF);
+        PC = V[0x0] + (nnn);
         break;
     case 0xC000:
         V[x] = (rand() % (0xFF + 1)) & (op & 0x00FF);
