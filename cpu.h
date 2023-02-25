@@ -1,6 +1,10 @@
 #ifndef CPU_H
 #define CPU_H
 
+#include <stdint.h>
+#include <random>
+#include <iostream>
+
 typedef struct CPU
 {
     uint8_t V[16];
@@ -17,6 +21,10 @@ typedef struct CPU
 
     uint8_t DT;
     uint8_t ST;
+
+    bool draw;
+
+    void tick();
 } CPU;
 
 #endif
