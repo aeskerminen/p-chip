@@ -1,5 +1,7 @@
 #include "cpu.h"
 
+#include <fstream>
+
 void CPU::tick()
 {
     uint16_t op = (memory[PC] << 8) | memory[PC + 1];
@@ -237,6 +239,16 @@ void CPU::tick()
 
 void CPU::init()
 {
+    I = 0;
+    PC = 0x200;
+
+    SP = 0;
+
+    DT = 0;
+    ST = 0;
+
+    draw = false;
+
     for (int i = 0; i < 16; i++)
         V[i] = 0;
     for (int i = 0; i < 4096; i++)
@@ -249,4 +261,23 @@ void CPU::init()
 
 void CPU::load_rom(const char *PATH)
 {
+    FILE *rom = fopen(PATH, "rb");
+    std::streampos size;
+    char *buffer;
+
+    std::ifstream rom(PATH, std::ios::in | std::ios::binary | std::ios::ate);
+    if (rom.is_open())
+    {
+        size = rom.tellg();
+        buffer = new char[size];
+
+        rom.seekg(0, std::ios::beg);
+        file.read(buffer, size);
+        file.close();
+    }
+
+    for (int i = 0; i < size; i++)
+    {
+        memory[0x200 + i] = buffer[i];
+    }
 }

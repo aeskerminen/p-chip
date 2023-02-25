@@ -3,7 +3,9 @@
 
 #include <stdint.h>
 #include <random>
+
 #include <iostream>
+#include <fstream>
 
 typedef struct CPU
 {
