@@ -24,7 +24,9 @@ typedef struct CPU
 
     bool draw;
 
+    void init();
     void tick();
+    void load_rom(const char *PATH);
 } CPU;
 
 #endif

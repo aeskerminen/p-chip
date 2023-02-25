@@ -234,3 +234,19 @@ void CPU::tick()
     }
     }
 }
+
+void CPU::init()
+{
+    for (int i = 0; i < 16; i++)
+        V[i] = 0;
+    for (int i = 0; i < 4096; i++)
+        memory[i] = 0;
+    for (int i = 0; i < 24; i++)
+        stack[i] = 0;
+    for (int i = 0; i < 2048; i++)
+        screen[i] = 0;
+}
+
+void CPU::load_rom(const char *PATH)
+{
+}
