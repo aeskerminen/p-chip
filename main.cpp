@@ -13,6 +13,8 @@
 
 #include <Windows.h>
 
+#include "cpu.h"
+
 const unsigned char font[80] = {
     0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
     0x20, 0x60, 0x20, 0x20, 0x70, // 1
@@ -32,17 +34,6 @@ const unsigned char font[80] = {
     0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 };
 
-uint8_t V[16];
-uint8_t memory[4096];
-uint8_t screen[64 * 32];
-
-uint16_t SP{0};
-uint16_t stack[16]{0};
-
-uint16_t PC{0x200};
-uint16_t I{0};
-
-uint8_t keyboard[16];
 uint8_t keymap[16] = {
     SDLK_x,
     SDLK_1,
@@ -62,8 +53,7 @@ uint8_t keymap[16] = {
     SDLK_v,
 };
 
-uint8_t DT{0};
-uint8_t ST{0};
+CPU cpu;
 
 bool draw = false;
 
