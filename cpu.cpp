@@ -1,7 +1,5 @@
 #include "cpu.h"
 
-#include <fstream>
-
 void CPU::tick()
 {
     uint16_t op = (memory[PC] << 8) | memory[PC + 1];
@@ -257,6 +255,11 @@ void CPU::init()
         stack[i] = 0;
     for (int i = 0; i < 2048; i++)
         screen[i] = 0;
+
+    for (int i = 0; i < 16 * 5; i++)
+    {
+        cpu.memory[i] = font[i];
+    }
 }
 
 void CPU::load_rom(const char *PATH)
