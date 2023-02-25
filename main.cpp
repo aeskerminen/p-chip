@@ -218,11 +218,11 @@ void tick()
             {
                 if ((pixel & (0x80 >> xline)) != 0)
                 {
-                    if (screen[((cx + xline) + ((cy + yline) * 64)) % 2048] == 1)
-                    {
+                    int coordinate = ((cx + xline) + ((cy + yline) * 64)) % 2048;
+                    if (screen[coordinate] == 1)
                         V[0xF] = 1;
-                    }
-                    screen[((cx + xline) + ((cy + yline) * 64)) % 2048] ^= 1;
+
+                    screen[coordinate] ^= 1;
                 }
             }
         }
