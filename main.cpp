@@ -310,17 +310,17 @@ int main(int argv, char *args[])
     srand(time(NULL));
 
     for (int i = 0; i < 16; i++)
-        V[i] = 0;
+        cpu.V[i] = 0;
     for (int i = 0; i < 4096; i++)
-        memory[i] = 0;
+        cpu.memory[i] = 0;
     for (int i = 0; i < 24; i++)
-        stack[i] = 0;
+        cpu.stack[i] = 0;
     for (int i = 0; i < 2048; i++)
-        screen[i] = 0;
+        cpu.screen[i] = 0;
 
     for (int i = 0; i < 16 * 5; i++)
     {
-        memory[i] = font[i];
+        cpu.memory[i] = font[i];
     }
 
     FILE *rom = fopen("./roms/games/pong.ch8", "rb");
@@ -356,7 +356,7 @@ int main(int argv, char *args[])
     {
         for (int i = 0; i < rom_size; ++i)
         {
-            memory[i + 512] = (uint8_t)rom_buffer[i];
+            cpu.memory[i + 512] = (uint8_t)rom_buffer[i];
         }
     }
     else
@@ -396,7 +396,7 @@ int main(int argv, char *args[])
                 {
                     if (e.key.keysym.sym == keymap[i])
                     {
-                        keyboard[i] = 1;
+                        cpu.keyboard[i] = 1;
                     }
                 }
             }
@@ -407,7 +407,7 @@ int main(int argv, char *args[])
                 {
                     if (e.key.keysym.sym == keymap[i])
                     {
-                        keyboard[i] = 0;
+                        cpu.keyboard[i] = 0;
                     }
                 }
             }
@@ -418,10 +418,10 @@ int main(int argv, char *args[])
 
         if (cycles == 8)
         {
-            if (ST > 0)
-                ST--;
-            if (DT > 0)
-                DT--;
+            if (cpu.ST > 0)
+                cpu.ST--;
+            if (cpu.DT > 0)
+                cpu.DT--;
             cycles = 0;
         }
 
@@ -431,7 +431,7 @@ int main(int argv, char *args[])
             // Store pixels in temporary buffer
             for (int i = 0; i < 2048; ++i)
             {
-                uint8_t pixel = screen[i];
+                uint8_t pixel = cpu.screen[i];
                 pixels[i] = (0x00FFFFFF * pixel) | 0xFF000000;
             }
             // Update SDL texture
