@@ -75,6 +75,9 @@ void tick()
 
     PC += 2;
 
+    int x = ((op & 0x0F00) >> 8);
+    int y = ((op & 0x00F0) >> 4);
+
     switch (op & 0xF000)
     {
     case 0x0000:
@@ -103,23 +106,23 @@ void tick()
         PC = (op & 0x0FFF);
         break;
     case 0x3000:
-        if (V[(op & 0x0F00) >> 8] == (op & 0x00FF))
+        if (V[x] == (op & 0x00FF))
             PC += 2;
         break;
     case 0x4000:
-        if (V[(op & 0x0F00) >> 8] != (op & 0x00FF))
+        if (V[x] != (op & 0x00FF))
             PC += 2;
         break;
     case 0x5000:
-        if (V[(op & 0x0F00) >> 8] == V[(op & 0x00F0) >> 4])
+        if (V[x] == V[y])
             PC += 2;
         break;
     case 0x6000:
-        V[(op & 0x0F00) >> 8] = (op & 0x00FF);
+        V[x] = (op & 0x00FF);
 
         break;
     case 0x7000:
-        V[(op & 0x0F00) >> 8] += (op & 0x00FF);
+        V[x] += (op & 0x00FF);
 
         break;
 
@@ -128,56 +131,56 @@ void tick()
         switch (op & 0x000F)
         {
         case 0x0000:
-            V[(op & 0x0F00) >> 8] = V[(op & 0x00F0) >> 4];
+            V[x] = V[y];
 
             break;
         case 0x0001:
-            V[(op & 0x0F00) >> 8] |= V[(op & 0x00F0) >> 4];
+            V[x] |= V[y];
 
             break;
         case 0x0002:
-            V[(op & 0x0F00) >> 8] &= V[(op & 0x00F0) >> 4];
+            V[x] &= V[y];
 
             break;
         case 0x0003:
-            V[(op & 0x0F00) >> 8] ^= V[(op & 0x00F0) >> 4];
+            V[x] ^= V[y];
 
             break;
         case 0x0004:
-            V[(op & 0x0F00) >> 8] += V[(op & 0x00F0) >> 4];
+            V[x] += V[y];
 
-            if (V[(op & 0x00F0) >> 4] > (0xFF - V[(op & 0x0F00) >> 8]))
+            if (V[y] > (0xFF - V[x]))
                 V[0xF] = 1;
             else
                 V[0xF] = 0;
 
             break;
         case 0x0005:
-            if (V[(op & 0x00F0) >> 4] > V[(op & 0x0F00) >> 8])
+            if (V[y] > V[x])
                 V[0xF] = 0;
             else
                 V[0xF] = 1;
 
-            V[(op & 0x0F00) >> 8] -= V[(op & 0x00F0) >> 4];
+            V[x] -= V[y];
 
             break;
         case 0x0006:
-            V[0xF] = V[(op & 0x0F00) >> 8] & 0x1;
-            V[(op & 0x0F00) >> 8] >>= 1;
+            V[0xF] = V[x] & 0x1;
+            V[x] >>= 1;
 
             break;
         case 0x0007:
-            if (V[(op & 0x0F00) >> 8] > V[(op & 0x00F0) >> 4])
+            if (V[x] > V[y])
                 V[0xF] = 0;
             else
                 V[0xF] = 1;
 
-            V[(op & 0x0F00) >> 8] = V[(op & 0x00F0) >> 4] - V[(op & 0x0F00) >> 8];
+            V[x] = V[y] - V[x];
 
             break;
         case 0x000E:
-            V[0xF] = V[(op & 0x0F00) >> 8] >> 7;
-            V[(op & 0x0F00) >> 8] <<= 1;
+            V[0xF] = V[x] >> 7;
+            V[x] <<= 1;
 
             break;
         }
@@ -185,7 +188,7 @@ void tick()
     }
 
     case 0x9000:
-        if (V[(op & 0x0F00) >> 8] != V[(op & 0x00F0) >> 4])
+        if (V[x] != V[y])
             PC += 2;
         break;
     case 0xA000:
@@ -195,13 +198,13 @@ void tick()
         PC = V[0x0] + (op & 0x0FFF);
         break;
     case 0xC000:
-        V[(op & 0x0F00) >> 8] = (rand() % (0xFF + 1)) & (op & 0x00FF);
+        V[x] = (rand() % (0xFF + 1)) & (op & 0x00FF);
 
         break;
     case 0xD000:
     {
-        unsigned short x = V[(op & 0x0F00) >> 8];
-        unsigned short y = V[(op & 0x00F0) >> 4];
+        unsigned short cx = V[x];
+        unsigned short cy = V[y];
         unsigned short height = op & 0x000F;
         unsigned short pixel;
 
@@ -213,11 +216,11 @@ void tick()
             {
                 if ((pixel & (0x80 >> xline)) != 0)
                 {
-                    if (screen[((x + xline) + ((y + yline) * 64)) % 2048] == 1)
+                    if (screen[((cx + xline) + ((cy + yline) * 64)) % 2048] == 1)
                     {
                         V[0xF] = 1;
                     }
-                    screen[((x + xline) + ((y + yline) * 64)) % 2048] ^= 1;
+                    screen[((cx + xline) + ((cy + yline) * 64)) % 2048] ^= 1;
                 }
             }
         }
@@ -230,11 +233,11 @@ void tick()
         switch ((op & 0x00FF))
         {
         case 0x009E:
-            if (keyboard[V[(op & 0x0F00) >> 8]] != 0)
+            if (keyboard[V[x]] != 0)
                 PC += 2;
             break;
         case 0x00A1:
-            if (keyboard[V[(op & 0x0F00) >> 8]] == 0)
+            if (keyboard[V[x]] == 0)
                 PC += 2;
             break;
         }
@@ -246,7 +249,7 @@ void tick()
         switch ((op & 0x00FF))
         {
         case 0x0007:
-            V[(op & 0x0F00) >> 8] = DT;
+            V[x] = DT;
 
             break;
         case 0x000A:
@@ -256,7 +259,7 @@ void tick()
             {
                 if (keyboard[i] != 0)
                 {
-                    V[(op & 0x0F00) >> 8] = i;
+                    V[x] = i;
                     found = true;
                 }
             }
@@ -269,24 +272,24 @@ void tick()
         }
         break;
         case 0x0015:
-            DT = V[(op & 0x0F00) >> 8];
+            DT = V[x];
             break;
         case 0x0018:
-            ST = V[(op & 0x0F00) >> 8];
+            ST = V[x];
             break;
         case 0x001E:
-            if (I + V[(op & 0x0F00) >> 8] > 0xFFF)
+            if (I + V[x] > 0xFFF)
                 V[0xF] = 1;
             else
                 V[0xF] = 0;
-            I += V[(op & 0x0F00) >> 8];
+            I += V[x];
             break;
         case 0x0029:
-            I = V[(op & 0x0F00) >> 8] * 0x5;
+            I = V[x] * 0x5;
             break;
         case 0x0033:
         {
-            auto num = V[(op & 0x0F00) >> 8];
+            auto num = V[x];
 
             memory[I] = (num / 100);
             memory[I + 1] = (num / 10) % 10;
@@ -295,13 +298,13 @@ void tick()
         break;
         case 0x0055:
         {
-            for (int i = 0; i <= ((op & 0x0F00) >> 8); i++)
+            for (int i = 0; i <= (x); i++)
                 memory[I + i] = V[i];
         }
         break;
         case 0x0065:
         {
-            for (int i = 0; i <= ((op & 0x0F00) >> 8); i++)
+            for (int i = 0; i <= (x); i++)
                 V[i] = memory[I + i];
         }
         break;
@@ -342,7 +345,7 @@ int main(int argv, char *args[])
         memory[i] = font[i];
     }
 
-    FILE *rom = fopen("tapeworm.ch8", "rb");
+    FILE *rom = fopen("./roms/games/pong.ch8", "rb");
     if (rom == NULL)
     {
         std::cerr << "Failed to open ROM" << std::endl;
