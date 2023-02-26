@@ -34,13 +34,11 @@ uint8_t keymap[16] = {
     SDLK_v,
 };
 
-CPU cpu;
-
-bool draw = false;
-
 int main(int argv, char *args[])
 {
     SDL_Init(SDL_INIT_EVERYTHING);
+
+    CPU cpu;
 
     SDL_Renderer *renderer;
     SDL_Window *window;
