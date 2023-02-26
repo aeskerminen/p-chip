@@ -257,9 +257,7 @@ void CPU::init()
         screen[i] = 0;
 
     for (int i = 0; i < 16 * 5; i++)
-    {
-        cpu.memory[i] = font[i];
-    }
+        memory[i] = font[i];
 }
 
 void CPU::load_rom(const char *PATH)
