@@ -74,9 +74,7 @@ int main(int argc, char *argv[])
                 for (int i = 0; i < 16; ++i)
                 {
                     if (e.key.keysym.sym == keymap[i])
-                    {
                         cpu.keyboard[i] = 1;
-                    }
                 }
             }
 
@@ -85,9 +83,7 @@ int main(int argc, char *argv[])
                 for (int i = 0; i < 16; ++i)
                 {
                     if (e.key.keysym.sym == keymap[i])
-                    {
                         cpu.keyboard[i] = 0;
-                    }
                 }
             }
         }
