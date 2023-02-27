@@ -1,17 +1,13 @@
 // CHIP8
-#include <iostream>
 #include <SDL2/SDL.h>
+
+#include <iostream>
+#include <Windows.h>
+#include <random>
 
 #include <fstream>
 #include <iterator>
 #include <vector>
-
-#include <random>
-
-#include <chrono>
-#include <thread>
-
-#include <Windows.h>
 
 #include "cpu.h"
 
@@ -50,13 +46,13 @@ int main(int argc, char *argv[])
     init();
 
     CPU cpu;
-    uint32_t pixels[2048];
+    uint32_t screenBuffer[2048];
 
     SDL_Event e;
-    SDL_Texture *sdlTexture = SDL_CreateTexture(renderer,
-                                                SDL_PIXELFORMAT_ARGB8888,
-                                                SDL_TEXTUREACCESS_STREAMING,
-                                                64, 32);
+    SDL_Texture *screenTexture = SDL_CreateTexture(renderer,
+                                                   SDL_PIXELFORMAT_ARGB8888,
+                                                   SDL_TEXTUREACCESS_STREAMING,
+                                                   64, 32);
     int cycles{0};
     bool play = true;
 
@@ -108,15 +104,12 @@ int main(int argc, char *argv[])
         if (cpu.draw)
         {
             for (int i = 0; i < 2048; ++i)
-            {
-                uint8_t pixel = cpu.screen[i];
-                pixels[i] = (0x00FFFFFF * pixel) | 0xFF000000;
-            }
-            // Update SDL texture
-            SDL_UpdateTexture(sdlTexture, NULL, pixels, 64 * sizeof(Uint32));
-            // Clear screen and render
+                screenBuffer[i] = (0x00FFFFFF * cpu.screen[i]) | 0xFF000000;
+
+            SDL_UpdateTexture(screenTexture, NULL, screenBuffer, 64 * sizeof(Uint32));
+
             SDL_RenderClear(renderer);
-            SDL_RenderCopy(renderer, sdlTexture, NULL, NULL);
+            SDL_RenderCopy(renderer, screenTexture, NULL, NULL);
             SDL_RenderPresent(renderer);
 
             cpu.draw = false;
