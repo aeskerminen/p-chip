@@ -46,10 +46,10 @@ int main(int argc, char *argv[])
 {
     init();
 
-    if (argc != 1)
-        return 0;
-
     CPU cpu;
+
+    if (argc != 2)
+        return 0;
 
     SDL_Event e;
     SDL_Texture *sdlTexture = SDL_CreateTexture(renderer,
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     bool play = true;
 
     cpu.init();
-    cpu.load_rom(argv[0]);
+    cpu.load_rom(argv[1]);
 
     uint32_t pixels[2048];
 
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
             }
         }
 
-        if (cycles == 9)
+        if (cycles == 8)
         {
             if (cpu.ST > 0)
                 cpu.ST--;
