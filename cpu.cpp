@@ -8,10 +8,10 @@ void CPU::tick()
 
     PC += 2;
 
-    int x = ((op & 0x0F00) >> 8);
-    int y = ((op & 0x00F0) >> 4);
-    int nnn = (op & 0x0FFF);
-    int nn = (op & 0x00FF);
+    int x = (op & 0x0F00) >> 8;
+    int y = (op & 0x00F0) >> 4;
+    int nnn = op & 0x0FFF;
+    int nn = op & 0x00FF;
 
     switch (op & 0xF000)
     {
@@ -25,26 +25,24 @@ void CPU::tick()
             draw = true;
             break;
         case 0x000E:
-            SP--;
-            PC = stack[SP];
+            PC = stack[--SP];
             break;
         }
         break;
     }
     case 0x1000:
-        PC = (nnn);
+        PC = nnn;
         break;
     case 0x2000:
-        stack[SP] = PC;
-        ++SP;
-        PC = (nnn);
+        stack[SP++] = PC;
+        PC = nnn;
         break;
     case 0x3000:
-        if (V[x] == (nn))
+        if (V[x] == nn)
             PC += 2;
         break;
     case 0x4000:
-        if (V[x] != (nn))
+        if (V[x] != nn)
             PC += 2;
         break;
     case 0x5000:
@@ -52,10 +50,10 @@ void CPU::tick()
             PC += 2;
         break;
     case 0x6000:
-        V[x] = (nn);
+        V[x] = nn;
         break;
     case 0x7000:
-        V[x] += (nn);
+        V[x] += nn;
         break;
 
     case 0x8000:
@@ -118,10 +116,10 @@ void CPU::tick()
         I = nnn;
         break;
     case 0xB000:
-        PC = V[0x0] + (nnn);
+        PC = V[0x0] + nnn;
         break;
     case 0xC000:
-        V[x] = (rand() % (0xFF + 1)) & (nn);
+        V[x] = (rand() % (0xFF + 1)) & nn;
         break;
     case 0xD000:
     {
@@ -152,7 +150,7 @@ void CPU::tick()
     break;
     case 0xE000:
     {
-        switch ((nn))
+        switch (nn)
         {
         case 0x009E:
             if (keyboard[V[x]] != 0)
@@ -219,13 +217,13 @@ void CPU::tick()
         break;
         case 0x0055:
         {
-            for (int i = 0; i <= (x); i++)
+            for (int i = 0; i <= x; i++)
                 memory[I + i] = V[i];
         }
         break;
         case 0x0065:
         {
-            for (int i = 0; i <= (x); i++)
+            for (int i = 0; i <= x; i++)
                 V[i] = memory[I + i];
         }
         break;
