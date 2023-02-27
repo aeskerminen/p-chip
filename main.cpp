@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 
     SDL_Event e;
     SDL_Texture *screenTexture = SDL_CreateTexture(renderer,
-                                                   SDL_PIXELFORMAT_ARGB8888,
+                                                   SDL_PIXELFORMAT_BGRA32,
                                                    SDL_TEXTUREACCESS_STREAMING,
                                                    64, 32);
     int cycles{0};
@@ -124,7 +124,7 @@ void init()
     SDL_Init(SDL_INIT_EVERYTHING);
 
     window = SDL_CreateWindow("P-CHIP", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, SDL_WINDOW_SHOWN);
-    renderer = SDL_CreateRenderer(window, -1, 0);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     SDL_RenderSetLogicalSize(renderer, w, h);
 
