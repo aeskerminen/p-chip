@@ -123,20 +123,20 @@ void CPU::tick()
         break;
     case 0xD000:
     {
-        unsigned short cx = V[x];
-        unsigned short cy = V[y];
-        unsigned short height = op & 0x000F;
-        unsigned short pixel;
+        uint8_t cx = V[x];
+        uint8_t cy = V[y];
+        uint8_t height = op & 0x000F;
+        uint8_t pixel;
 
         V[0xF] = 0;
-        for (int yline = 0; yline < height; yline++)
+        for (int vertical = 0; vertical < height; vertical++)
         {
-            pixel = memory[I + yline];
-            for (int xline = 0; xline < 8; xline++)
+            pixel = memory[I + vertical];
+            for (int horizontal = 0; horizontal < 8; horizontal++)
             {
-                if ((pixel & (0x80 >> xline)) != 0)
+                if ((pixel & (0x80 >> horizontal)) != 0)
                 {
-                    int coordinate = ((cx + xline) + ((cy + yline) * 64)) % 2048;
+                    int coordinate = ((cx + horizontal) + ((cy + vertical) * 64)) % 2048;
                     if (screen[coordinate] == 1)
                         V[0xF] = 1;
 
