@@ -123,9 +123,9 @@ void CPU::tick()
         break;
     case 0xD000:
     {
-        uint8_t cx = V[x];
-        uint8_t cy = V[y];
-        uint8_t height = op & 0x000F;
+        uint8_t cx{V[x]};
+        uint8_t cy{V[y]};
+        uint8_t height{op & 0x000F};
         uint8_t pixel;
 
         V[0xF] = 0;
