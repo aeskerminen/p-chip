@@ -44,12 +44,13 @@ void init();
 
 int main(int argc, char *argv[])
 {
+    if (argc != 2)
+        return 0;
+
     init();
 
     CPU cpu;
-
-    if (argc != 2)
-        return 0;
+    uint32_t pixels[2048];
 
     SDL_Event e;
     SDL_Texture *sdlTexture = SDL_CreateTexture(renderer,
@@ -61,8 +62,6 @@ int main(int argc, char *argv[])
 
     cpu.init();
     cpu.load_rom(argv[1]);
-
-    uint32_t pixels[2048];
 
     while (play)
     {
