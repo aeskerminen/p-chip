@@ -274,8 +274,5 @@ void CPU::load_rom(const char *PATH)
         rom.close();
     }
 
-    for (int i = 0; i < size; i++)
-    {
-        memory[0x200 + i] = (uint8_t)buffer[i];
-    }
+    memcpy(memory + 0x200, buffer, size);
 }
