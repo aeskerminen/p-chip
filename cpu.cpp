@@ -2,16 +2,16 @@
 
 void CPU::tick()
 {
-    uint16_t op = (memory[PC] << 8) | memory[PC + 1];
+    uint16_t op{(memory[PC] << 8) | memory[PC + 1]};
     std::cout
         << "HI: " << (uint16_t)memory[PC] << " | LO:" << (uint16_t)memory[PC + 1] << "| OPCODE: " << op << " | PC: " << PC << "\n";
 
     PC += 2;
 
-    int x = (op & 0x0F00) >> 8;
-    int y = (op & 0x00F0) >> 4;
-    int nnn = op & 0x0FFF;
-    int nn = op & 0x00FF;
+    int x{(op & 0x0F00) >> 8};
+    int y{(op & 0x00F0) >> 4};
+    int nnn{op & 0x0FFF};
+    int nn{op & 0x00FF};
 
     switch (op & 0xF000)
     {

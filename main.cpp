@@ -30,11 +30,11 @@ uint8_t keymap[16] = {
     SDLK_v,
 };
 
-constexpr int w = 1024;
-constexpr int h = 512;
+constexpr int w{1024};
+constexpr int h{512};
 
-SDL_Renderer *renderer;
-SDL_Window *window;
+SDL_Renderer *renderer{nullptr};
+SDL_Window *window{nullptr};
 
 void init();
 
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
                                                    SDL_TEXTUREACCESS_STREAMING,
                                                    64, 32);
     int cycles{0};
-    bool play = true;
+    bool play{true};
 
     cpu.init();
     cpu.load_rom(argv[1]);
