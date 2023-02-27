@@ -42,9 +42,12 @@ SDL_Window *window;
 
 void init();
 
-int main(int argv, char *args[])
+int main(int argc, char *argv[])
 {
     init();
+
+    if (argc != 1)
+        return 0;
 
     CPU cpu;
 
@@ -57,7 +60,7 @@ int main(int argv, char *args[])
     bool play = true;
 
     cpu.init();
-    cpu.load_rom("./roms/games/pong.ch8");
+    cpu.load_rom(argv[0]);
 
     uint32_t pixels[2048];
 
