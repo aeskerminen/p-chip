@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
         if (cpu.draw)
         {
             for (int i = 0; i < 2048; ++i)
-                screenBuffer[i] = (0x00FFFFFF * cpu.screen[i]) | 0xFF000000;
+                screenBuffer[i] = (0x00FFFFFF * cpu.screen[i]);
 
             SDL_UpdateTexture(screenTexture, NULL, screenBuffer, 64 * sizeof(Uint32));
 
