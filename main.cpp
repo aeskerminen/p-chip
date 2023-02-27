@@ -34,45 +34,37 @@ uint8_t keymap[16] = {
     SDLK_v,
 };
 
+constexpr int w = 1024;
+constexpr int h = 512;
+
+SDL_Renderer *renderer;
+SDL_Window *window;
+
+void init();
+
 int main(int argv, char *args[])
 {
-    SDL_Init(SDL_INIT_EVERYTHING);
+    init();
 
     CPU cpu;
 
-    SDL_Renderer *renderer;
-    SDL_Window *window;
-
-    int w = 1024;
-    int h = 512;
-
-    window = SDL_CreateWindow("P-CHIP", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, SDL_WINDOW_SHOWN);
-    renderer = SDL_CreateRenderer(window, -1, 0);
-
-    SDL_RenderSetLogicalSize(renderer, w, h);
-
-    srand(time(NULL));
-
-    cpu.init();
-
-    cpu.load_rom("./roms/games/pong.ch8");
-
     SDL_Event e;
-
-    bool play = true;
     SDL_Texture *sdlTexture = SDL_CreateTexture(renderer,
                                                 SDL_PIXELFORMAT_ARGB8888,
                                                 SDL_TEXTUREACCESS_STREAMING,
                                                 64, 32);
+    int cycles{0};
+    bool play = true;
+
+    cpu.init();
+    cpu.load_rom("./roms/games/pong.ch8");
 
     uint32_t pixels[2048];
 
-    int cycles{0};
-
     while (play)
     {
-
-        auto start_time = std::chrono::high_resolution_clock::now();
+        cpu.tick();
+        cycles++;
 
         while (SDL_PollEvent(&e))
         {
@@ -102,10 +94,7 @@ int main(int argv, char *args[])
             }
         }
 
-        cpu.tick();
-        cycles++;
-
-        if (cycles == 8)
+        if (cycles == 9)
         {
             if (cpu.ST > 0)
                 cpu.ST--;
@@ -116,8 +105,6 @@ int main(int argv, char *args[])
 
         if (cpu.draw)
         {
-            cpu.draw = false;
-            // Store pixels in temporary buffer
             for (int i = 0; i < 2048; ++i)
             {
                 uint8_t pixel = cpu.screen[i];
@@ -129,10 +116,26 @@ int main(int argv, char *args[])
             SDL_RenderClear(renderer);
             SDL_RenderCopy(renderer, sdlTexture, NULL, NULL);
             SDL_RenderPresent(renderer);
+
+            cpu.draw = false;
         }
 
         Sleep(1);
     }
 
+    SDL_Quit();
+
     return 0;
+}
+
+void init()
+{
+    SDL_Init(SDL_INIT_EVERYTHING);
+
+    window = SDL_CreateWindow("P-CHIP", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, SDL_WINDOW_SHOWN);
+    renderer = SDL_CreateRenderer(window, -1, 0);
+
+    SDL_RenderSetLogicalSize(renderer, w, h);
+
+    srand(time(NULL));
 }
