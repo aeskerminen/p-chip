@@ -37,9 +37,9 @@ SDL_Renderer *renderer{nullptr};
 SDL_Window *window{nullptr};
 
 void init();
-void processEvents(bool *play, CPU *cpu)
+void processEvents(bool *play, CPU *cpu);
 
-    int main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     if (argc != 2)
         return 0;
@@ -70,9 +70,6 @@ void processEvents(bool *play, CPU *cpu)
 
         processEvents(&play, &cpu);
 
-        // Use SDL_Delay instead of Sleep
-        SDL_Delay(1);
-
         if (cycles == 8)
         {
             if (cpu.ST > 0)
@@ -98,6 +95,8 @@ void processEvents(bool *play, CPU *cpu)
 
             cpu.draw = false;
         }
+
+        SDL_Delay(1);
     }
 
     SDL_Quit();
