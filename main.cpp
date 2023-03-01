@@ -37,8 +37,9 @@ SDL_Renderer *renderer{nullptr};
 SDL_Window *window{nullptr};
 
 void init();
+void processEvents(bool *play, CPU *cpu)
 
-int main(int argc, char *argv[])
+    int main(int argc, char *argv[])
 {
     if (argc != 2)
         return 0;
@@ -59,34 +60,18 @@ int main(int argc, char *argv[])
     cpu.init();
     cpu.load_rom(argv[1]);
 
+    // Use memset to clear the screen buffer
+    memset(screenBuffer, 0, sizeof(screenBuffer));
+
     while (play)
     {
         cpu.tick();
         cycles++;
 
-        while (SDL_PollEvent(&e))
-        {
-            if (e.type == SDL_QUIT || e.key.keysym.sym == SDLK_ESCAPE)
-                play = false;
+        processEvents(&play, &cpu);
 
-            if (e.type == SDL_KEYDOWN)
-            {
-                for (int i = 0; i < 16; ++i)
-                {
-                    if (e.key.keysym.sym == keymap[i])
-                        cpu.keyboard[i] = 1;
-                }
-            }
-
-            if (e.type == SDL_KEYUP)
-            {
-                for (int i = 0; i < 16; ++i)
-                {
-                    if (e.key.keysym.sym == keymap[i])
-                        cpu.keyboard[i] = 0;
-                }
-            }
-        }
+        // Use SDL_Delay instead of Sleep
+        SDL_Delay(1);
 
         if (cycles == 8)
         {
@@ -99,8 +84,11 @@ int main(int argc, char *argv[])
 
         if (cpu.draw)
         {
+            // Use memset to clear the screen buffer
+            memset(screenBuffer, 0, sizeof(screenBuffer));
+
             for (int i = 0; i < 2048; ++i)
-                screenBuffer[i] = (0x00FFFFFF * cpu.screen[i]);
+                screenBuffer[i] |= (0xFF * cpu.screen[i]);
 
             SDL_UpdateTexture(screenTexture, NULL, screenBuffer, 64 * sizeof(Uint32));
 
@@ -110,8 +98,6 @@ int main(int argc, char *argv[])
 
             cpu.draw = false;
         }
-
-        Sleep(1);
     }
 
     SDL_Quit();
@@ -129,4 +115,33 @@ void init()
     SDL_RenderSetLogicalSize(renderer, w, h);
 
     srand(time(NULL));
+}
+
+void processEvents(bool *play, CPU *cpu)
+{
+    SDL_Event e;
+    while (SDL_PollEvent(&e))
+    {
+        switch (e.type)
+        {
+        case SDL_QUIT:
+            *play = false;
+            break;
+        case SDL_KEYDOWN:
+            for (int i = 0; i < 16; ++i)
+            {
+                if (e.key.keysym.sym == keymap[i])
+                    cpu->keyboard[i] = 1;
+            }
+            break;
+
+        case SDL_KEYUP:
+            for (int i = 0; i < 16; ++i)
+            {
+                if (e.key.keysym.sym == keymap[i])
+                    cpu->keyboard[i] = 0;
+            }
+            break;
+        }
+    }
 }
