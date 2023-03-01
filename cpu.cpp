@@ -245,16 +245,13 @@ void CPU::init()
 
     draw = false;
 
-    for (int i = 0; i < 16; i++)
-        V[i] = 0;
-    for (int i = 0; i < 4096; i++)
-        memory[i] = 0;
-    for (int i = 0; i < 24; i++)
-        stack[i] = 0;
-    for (int i = 0; i < 2048; i++)
-        screen[i] = 0;
+    memset(V, 0, 16);
+    memset(stack, 0, 24);
 
+    memset(memory, 0, 4096);
     memcpy(memory, font, 80);
+
+    memset(screen, 0, 2048);
 }
 
 void CPU::load_rom(const char *PATH)

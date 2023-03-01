@@ -7,6 +7,8 @@
 #include <iostream>
 #include <fstream>
 
+#include <Windows.h>
+
 #include "font.h"
 
 typedef struct CPU
