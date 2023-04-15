@@ -174,7 +174,7 @@ void CPU::tick()
         case 0x000A:
         {
             bool found = false;
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < 16 && !found; i++)
             {
                 if (keyboard[i] != 0)
                 {
