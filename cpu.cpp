@@ -197,10 +197,15 @@ void CPU::tick()
             break;
         case 0x001E:
             if (I + V[x] > 0xFFF)
+            {
+                I += V[x];
                 V[0xF] = 1;
+            }
             else
+            {
+                I += V[x];
                 V[0xF] = 0;
-            I += V[x];
+            }
             break;
         case 0x0029:
             I = V[x] * 0x5;
