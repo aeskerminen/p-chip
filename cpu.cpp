@@ -2,7 +2,7 @@
 
 void CPU::tick()
 {
-    uint16_t op{(memory[PC] << 8) | memory[PC + 1]};
+    uint16_t op{static_cast<uint16_t>((memory[PC] << 8) | memory[PC + 1])};
     std::cout
         << "HI: " << (uint16_t)memory[PC] << " | LO:" << (uint16_t)memory[PC + 1] << "| OPCODE: " << op << " | PC: " << PC << "\n";
 
@@ -125,7 +125,7 @@ void CPU::tick()
     {
         uint8_t cx{V[x]};
         uint8_t cy{V[y]};
-        uint8_t height{op & 0x000F};
+        uint8_t height{static_cast<uint8_t>(op & 0x000F)};
         uint8_t pixel;
 
         V[0xF] = 0;
