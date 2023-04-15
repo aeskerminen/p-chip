@@ -20,8 +20,7 @@ void CPU::tick()
         switch (op & 0x000F)
         {
         case 0x0000:
-            for (int i = 0; i < 2048; i++)
-                screen[i] = 0;
+            memset(screen, 0, 2048);
             draw = true;
             break;
         case 0x000E:
