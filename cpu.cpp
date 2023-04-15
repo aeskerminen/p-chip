@@ -98,11 +98,16 @@ void CPU::tick()
             break;
         case 0x0007:
             if (V[x] > V[y])
+            {
+                V[x] = V[y] - V[x];
                 V[0xF] = 0;
+            }
             else
+            {
+                V[x] = V[y] - V[x];
                 V[0xF] = 1;
+            }
 
-            V[x] = V[y] - V[x];
             break;
         case 0x000E:
             V[0xF] = (V[x] >> 7);
