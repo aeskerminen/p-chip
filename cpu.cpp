@@ -96,9 +96,12 @@ void CPU::tick()
 
             break;
         case 0x0006:
-            V[0xF] = V[x] & 0x1;
+        {
+            uint8_t temp = V[x];
             V[x] >>= 1;
-            break;
+            V[0xF] = temp & 0x1;
+        }
+        break;
         case 0x0007:
             if (V[x] > V[y])
             {
