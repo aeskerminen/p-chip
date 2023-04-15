@@ -116,9 +116,12 @@ void CPU::tick()
 
             break;
         case 0x000E:
-            V[0xF] = (V[x] >> 7);
+        {
+            uint8_t temp = V[x];
             V[x] <<= 1;
-            break;
+            V[0xF] = (temp >> 7);
+        }
+        break;
         }
         break;
     }
