@@ -173,7 +173,7 @@ void CPU::tick()
             break;
         case 0x000A:
         {
-            bool found = false;
+            bool found{false};
             for (int i = 0; i < 16 && !found; i++)
             {
                 if (keyboard[i] != 0)
@@ -208,7 +208,7 @@ void CPU::tick()
             break;
         case 0x0033:
         {
-            auto num = V[x];
+            uint8_t num{V[x]};
 
             memory[I] = (num / 100);
             memory[I + 1] = (num / 10) % 10;
