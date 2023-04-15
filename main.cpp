@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 
         processEvents(&play, &cpu);
 
-        if (cycles == 7)
+        if (cycles == 4)
         {
             if (cpu.ST > 0)
                 cpu.ST--;
