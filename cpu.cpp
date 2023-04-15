@@ -74,10 +74,10 @@ void CPU::tick()
         case 0x0004:
             V[x] += V[y];
 
-            if (V[y] > (0xFF - V[x]))
-                V[0xF] = 1;
-            else
+            if (V[y] >= (0xFF - V[x]))
                 V[0xF] = 0;
+            else
+                V[0xF] = 1;
             break;
         case 0x0005:
             if (V[y] >= V[x])
