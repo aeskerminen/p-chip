@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
             memset(screenBuffer, 0, sizeof(screenBuffer));
 
             for (int i = 0; i < 2048; ++i)
-                screenBuffer[i] |= (0xFF * cpu.screen[i]);
+                screenBuffer[i] |= (0xFFFF * cpu.screen[i]);
 
             SDL_UpdateTexture(screenTexture, NULL, screenBuffer, 64 * sizeof(Uint32));
 
