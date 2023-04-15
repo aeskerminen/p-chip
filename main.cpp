@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 
         processEvents(&play, &cpu);
 
-        if (cycles == 8)
+        if (cycles == 7)
         {
             if (cpu.ST > 0)
                 cpu.ST--;
@@ -133,7 +133,6 @@ void processEvents(bool *play, CPU *cpu)
                     cpu->keyboard[i] = 1;
             }
             break;
-
         case SDL_KEYUP:
             for (int i = 0; i < 16; ++i)
             {
